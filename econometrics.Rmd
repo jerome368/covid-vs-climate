@@ -1,0 +1,118 @@
+title: "ernakulam's climate vs covid numbers analysis"
+author:"
+output: html_notebook
+---
+
+```{r}
+# Creating a dataframe
+df <- read.csv("C:\\Users\\Jerome\\Downloads\\ernakulam (1).csv", header = TRUE)
+df
+```
+
+```{r}
+head(df)
+```
+
+```{r}
+# To view data in tabular form
+View(df)
+```
+
+```{r}
+# Dimensions
+dim(df)
+```
+
+```{r}
+# To check the datatype of each column in df
+str(df)
+```
+
+```{r}
+summary(df)
+```
+```{r}
+# Date column
+str(df$DATE)
+```
+
+
+```{r}
+# Converting to date format
+x <- as.Date(df$DATE)
+head(x)
+class(x)
+str(x)
+```
+```{r}
+# Creating year, month, day columns
+year <- as.numeric(format(x,'%Y'))
+head(year)
+month <- as.numeric(format(x,'%m'))
+head(month)
+day <- as.numeric(format(x,'%d'))
+head(day)
+```
+
+```{r}
+head(df)
+```
+
+```{r}
+# Add columns to the existing df
+df <- cbind(df,year,month,day)
+head(df)
+```
+
+```{r}
+summary(df)
+```
+
+
+```{r}
+# Time Series - Germany's daily electricity consumption 
+plot(df[,2], xlab = "day", ylab = "QV2M", type = 'l',
+     main = "Pressure ", col = 'turquoise')
+```
+
+```{r}
+# Solar
+plot(df[,3], xlab = "day", ylab = "RH2M", type = 'l', main="Temperature", col = 'red')
+
+```
+
+```{r}
+# Wind
+plot(df [,4], xlab = "day", ylab = "PRECTOTCORR", type = 'l', main="Precipitation", col = 'yellow')
+```
+
+plot(df [,5], xlab = "day", ylab = "T2M", type = 'l', main="Precipitation", col = 'black')
+
+```{r}
+x <- as.Date(df$Date)
+moddate <- as.Date(x, format = "%m/%d/%Y")
+df2 <- cbind(moddate, df)
+head(df2)
+```
+
+```{r}
+df3 = subset(df2, subset = df2$moddate>='2016-01-01' & df2$moddate<='2016-12-31')
+```
+
+```{r}
+plot(df3[,1], df3[,3], xlab = 'year', ylab = 'Daily Totals', type = 'l', main = 'Consumption', col = 'orange')
+```
+
+Time series plot for a specific year. We see the weekly oscillations in the above plot. There is also drastic decrease in electricity consumption in early Jan and late Dec during holidays.  
+
+```{r}
+plot(df3[,1], df3[,4], xlab = 'year', ylab = 'Daily Totals', type = 'l', main = 'Wind', col = 'green')
+```
+The wind production increases during winters as expected above. 
+Hence verified for 2016.
+
+```{r}
+plot(df3[,1], df3[,5], xlab = 'year', ylab = 'Daily Totals', type = 'l', main = 'Solar', col = 'purple')
+```
+
+The Solar production increases during summers as expected. 
